@@ -1,27 +1,13 @@
-# vuex-loading
+A simple demo how on to make a Vue progressive loading bar.
 
-> A Vue.js project
+I wrote an article about how it works and how to extend it:
 
-## Build Setup
+https://medium.com/@lachlanmiller_52885/how-to-make-a-progressive-loading-bar-for-your-vue-app-63c29a986f19
 
-``` bash
-# install dependencies
-npm install
+TODO:
 
-# serve with hot reload at localhost:8080
-npm run dev
+- better API to allow the user to style the progress bar?
+- handle errored requests
+- handle more complex scenarios (I’m sure there are some)
+- Handle cancelled requests
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
-```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
