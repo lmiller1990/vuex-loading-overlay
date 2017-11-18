@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="loading-bar">
+    <div class="loading-bar" :style="opacity">
       <div class="progress" :style="width"></div>
     </div>
 
@@ -30,6 +30,13 @@ export default {
     width () {
       return {
         'width': 100 - (100 / (this.$store.getters['total'] / this.$store.getters['pendingCalls'])) + 'vw',
+      }
+    },
+
+    opacity () {
+      return { 
+        'opacity': this.$store.getters['pendingCalls'] === 0 ? '0' : '1',
+        'transition-delay': '1.5s',
         'transition-duration': '1s'
       }
     }
@@ -53,15 +60,15 @@ export default {
   top: 0px;
   position: absolute;
   width: 100vw;
-  background-color: green;
 
 }
 
 .progress {
-  background-color: white;
+  transition-duration: 1s;
+  background-color: rgba(0, 188, 212, 0.5);
   position: absolute;
   left: 1px;
   top: 1px;
-  height: 1px;
+  height: 2px;
 }
 </style>
