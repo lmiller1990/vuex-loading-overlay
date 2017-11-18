@@ -1,5 +1,4 @@
 import camelCase from 'lodash/camelCase'
-import Vue from 'vue'
 
 export default store => {
   store.subscribe((mutation, state) => {
