@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import camelCase from 'lodash/camelCase'
+import progressiveLoader from './plugin'
 
 Vue.use(Vuex)
 
@@ -11,53 +11,47 @@ const state = {
 
 const mutations = {
   SET_ACTION (state, { action }) {
-    state.ajaxCalls = { ...state.ajaxCalls, 
-      [action.type]: { ...action, pending: true }
+    state.ajaxCalls = { ...state.ajaxCalls, [action.type]: { ...action, pending: true }
     }
   },
 
   SET_PENDING (state, { type, pending }) {
     state.ajaxCalls[type].pending = false
-    delete state.ajaxCalls[type]
   },
 
-  SLOW_CALL_SUCCESS (state, { result }) {
+  FIRST_CALL_SUCCESS (state) {
   },
   
-  MEDIUM_CALL_SUCCESS (state, { result }) {
-
+  SECOND_CALL_SUCCESS (state) {
   },
 
-  FAST_CALL_SUCCESS (state, { result }) {
-
+  THIRD_CALL_SUCCESS (state) {
   }
 }
 
 const actions = {
-  slowCall ({ commit }) {
+  firstCall ({ commit }) {
     setTimeout(() => {
-      axios.get('https://jsonplaceholder.typicode.com/posts/1')
-      .then(res => commit('SLOW_CALL_SUCCESS', res))
-    }, 500)
+      commit('FIRST_CALL_SUCCESS')
+    }, 1000)
   },
 
-  mediumCall ({ commit }) {
+  secondCall ({ commit }) {
     setTimeout(() => {
-      axios.get('https://jsonplaceholder.typicode.com/posts/2')
-      .then(res => commit('MEDIUM_CALL_SUCCESS', res))
-    }, 1400)
+      commit('SECOND_CALL_SUCCESS')
+    }, 2500)
   },
   
-  fastCall ({ commit }) {
+  thirdCall ({ commit }) {
     setTimeout(() => {
-      axios.get('https://jsonplaceholder.typicode.com/posts/3')
-      .then(res => commit('FAST_CALL_SUCCESS', res))
+      commit('THIRD_CALL_SUCCESS')
     }, 4000)
   }
 }
 
 const getters = {
-  pendingCalls: state => Object.keys(state.ajaxCalls).filter(x => state.ajaxCalls[x].pending === true).length
+  pendingCalls: state => Object.keys(state.ajaxCalls).filter(x => state.ajaxCalls[x].pending === true).length,
+  total: state => Object.keys(state.ajaxCalls).length
 }
 
 const store = new Vuex.Store({ 
@@ -65,18 +59,8 @@ const store = new Vuex.Store({
   state, 
   mutations, 
   actions,
-  getters
-})
-
-store.subscribe((mutation, state) => {
-  if (mutation.type.includes('SUCCESS')) {
-    let type = camelCase(mutation.type.substring(0, mutation.type.indexOf('SUCCESS') - 1))
-    store.commit('SET_PENDING', { type, pending: false })
-  }
-})
-
-store.subscribeAction(action => {
-  store.commit('SET_ACTION', { action })
+  getters,
+  plugins: [progressiveLoader]
 })
 
 export default store

@@ -3,13 +3,14 @@
     <div class="loading-bar">
       <div class="progress" :style="width"></div>
     </div>
+
     <div v-for="s in Object.keys($store.state.ajaxCalls)" :key="s.type">
       <div>
-        {{ s }}: {{ $store.state.ajaxCalls[s] }}
+        {{ $store.state.ajaxCalls[s] }}
       </div>
     </div>
     <br>
-    {{ $store.getters['pendingCalls'] }}
+    Progress: {{ $store.getters['pendingCalls'] }} / {{ $store.getters['total'] }}
   </div>
 </template>
 
@@ -20,14 +21,17 @@ export default {
   name: 'app',
 
   created () {
-    this.$store.dispatch('slowCall')
-    this.$store.dispatch('mediumCall')
-    this.$store.dispatch('fastCall')
+    this.$store.dispatch('firstCall', { isAjax: true })
+    this.$store.dispatch('secondCall', { isAjax: true })
+    this.$store.dispatch('thirdCall', { isAjax: true })
   },
 
   computed: {
     width () {
-      return { width: 100 / this.$store.getters['pendingCalls'] + 'vw' }
+      return {
+        'width': 100 - (100 / (this.$store.getters['total'] / this.$store.getters['pendingCalls'])) + 'vw',
+        'transition-duration': '1s'
+      }
     }
   }
 }
